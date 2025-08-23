@@ -4,6 +4,6 @@
     "title": "first post",
     "date": "2025-08-23",
     "excerpt": "markdown testing",
-    "content": "# Welcome!\n\nThis post demonstrates **markdown** features:\n\n## Features\n\n- **Bold text**\n- *Italic text*\n- `Code snippets`\n- [Links](https://example.com)\n\n```javascript\nconsole.log('Hello, world!');\n```\n\n> This is a blockquote\n\nEnjoy writing!"
+    "content": "# hello\n\nwe be testing **markdown**:\n\n## basics\n\n- **big black bold wide fat**\n- *slim jim micheal jackson*\n- `inline code`\n- [linky link link](https://example.com)\n\n```c\nint main() {\nstd::cout << \"Hello World\" << std::endl;\n}\n```\n\n> blockquote go brr\n\nok i hope it looks good and not stupid ok bye!!"
   }
 ]
