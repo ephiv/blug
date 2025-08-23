@@ -1,0 +1,9 @@
+[
+  {
+    "id": "1",
+    "title": "first post",
+    "date": "2025-08-23",
+    "excerpt": "markdown testing",
+    "content": "# Welcome!\n\nThis post demonstrates **markdown** features:\n\n## Features\n\n- **Bold text**\n- *Italic text*\n- `Code snippets`\n- [Links](https://example.com)\n\n```javascript\nconsole.log('Hello, world!');\n```\n\n> This is a blockquote\n\nEnjoy writing!"
+  }
+]

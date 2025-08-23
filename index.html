@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>blug</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            line-height: 1.6;
+            color: #333;
+            background-color: #fff;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            border-bottom: 2px solid #333;
+            padding-bottom: 20px;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: normal;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            font-size: 0.9rem;
+            margin-top: 10px;
+            color: #666;
+        }
+
+        .post-preview {
+            border: 1px solid #333;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .post-preview:hover {
+            background-color: #f5f5f5;
+        }
+
+        .post-header {
+            padding: 20px;
+            border-bottom: 1px solid #333;
+        }
+
+        .post-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .post-date {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .post-excerpt {
+            padding: 0 20px 20px;
+            color: #666;
+        }
+
+        .post-content {
+            display: none;
+            padding: 20px;
+            border-top: 1px solid #333;
+            background-color: #fafafa;
+        }
+
+        .post-content.expanded {
+            display: block;
+        }
+
+        .expand-indicator {
+            float: right;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .no-posts {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            padding: 40px;
+            border: 1px solid #333;
+        }
+
+        /* Markdown content styling */
+        .post-content h1,
+        .post-content h2,
+        .post-content h3,
+        .post-content h4,
+        .post-content h5,
+        .post-content h6 {
+            margin: 20px 0 10px;
+            font-weight: bold;
+        }
+
+        .post-content h1 {
+            font-size: 1.5rem;
+            border-bottom: 2px solid #333;
+            padding-bottom: 5px;
+        }
+
+        .post-content h2 {
+            font-size: 1.3rem;
+            border-bottom: 1px solid #333;
+            padding-bottom: 3px;
+        }
+
+        .post-content p {
+            margin-bottom: 15px;
+        }
+
+        .post-content ul,
+        .post-content ol {
+            margin: 15px 0 15px 20px;
+        }
+
+        .post-content li {
+            margin-bottom: 5px;
+        }
+
+        .post-content blockquote {
+            border-left: 3px solid #333;
+            padding-left: 15px;
+            margin: 15px 0;
+            color: #666;
+            font-style: italic;
+        }
+
+        .post-content code {
+            background-color: #f0f0f0;
+            padding: 2px 4px;
+            font-family: 'Courier New', monospace;
+            border: 1px solid #ddd;
+        }
+
+        .post-content pre {
+            background-color: #f0f0f0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+
+        .post-content pre code {
+            background: none;
+            border: none;
+            padding: 0;
+        }
+
+        .post-content a {
+            color: #333;
+            text-decoration: underline;
+        }
+
+        .post-content a:hover {
+            background-color: #333;
+            color: #fff;
+        }
+
+        .post-content strong {
+            font-weight: bold;
+        }
+
+        .post-content em {
+            font-style: italic;
+        }
+
+        .post-content hr {
+            border: none;
+            border-top: 1px solid #333;
+            margin: 20px 0;
+        }
+
+        .loading {
+            text-align: center;
+            color: #666;
+            padding: 40px;
+        }
+
+        .error {
+            text-align: center;
+            color: #666;
+            padding: 40px;
+            border: 1px solid #333;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>blug</h1>
+            <p class="subtitle">a minimal blog (im too lazy to make a real one)</p>
+        </header>
+
+        <main id="blog-posts">
+            <div class="loading">...</div>
+        </main>
+    </div>
+
+    <script type="module">
+        import { marked } from 'https://cdnjs.cloudflare.com/ajax/libs/marked/16.2.0/lib/marked.esm.js';
+
+        const postsContainer = document.getElementById('blog-posts');
+
+        // Configure marked for better security
+        marked.setOptions({
+            breaks: true,
+            gfm: true
+        });
+
+        async function loadPosts() {
+            try {
+                const response = await fetch('./posts.json');
+
+                if (!response.ok) {
+                    throw new Error('Failed to load posts');
+                }
+
+                const posts = await response.json();
+                renderPosts(posts);
+            } catch (error) {
+                console.error('Error loading posts:', error);
+                showError();
+            }
+        }
+
+        function renderPosts(posts) {
+            if (!posts || posts.length === 0) {
+                showNoPosts();
+                return;
+            }
+
+            const postsHtml = posts.map(post => createPostHTML(post)).join('');
+            postsContainer.innerHTML = postsHtml;
+
+            // Add click handlers for post expansion
+            document.querySelectorAll('.post-preview').forEach(preview => {
+                preview.addEventListener('click', togglePost);
+            });
+        }
+
+        function createPostHTML(post) {
+            const date = new Date(post.date).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+
+            return `
+                <article class="post-preview" data-id="${post.id}">
+                    <div class="post-header">
+                        <h2 class="post-title">${escapeHtml(post.title)}</h2>
+                        <div class="post-date">${date}</div>
+                        <span class="expand-indicator">+</span>
+                    </div>
+                    <div class="post-excerpt">
+                        ${escapeHtml(post.excerpt)}
+                    </div>
+                    <div class="post-content" id="content-${post.id}">
+                        ${marked.parse(post.content)}
+                    </div>
+                </article>
+            `;
+        }
+
+        function togglePost(event) {
+            const preview = event.currentTarget;
+            const content = preview.querySelector('.post-content');
+            const indicator = preview.querySelector('.expand-indicator');
+
+            if (content.classList.contains('expanded')) {
+                content.classList.remove('expanded');
+                indicator.textContent = '+';
+            } else {
+                content.classList.add('expanded');
+                indicator.textContent = '−';
+            }
+        }
+
+        function showNoPosts() {
+            postsContainer.innerHTML = `
+                <div class="no-posts">
+                    No posts available. Create a posts.json file with your blog posts.
+                </div>
+            `;
+        }
+
+        function showError() {
+            postsContainer.innerHTML = `
+                <div class="error">
+                    <h3>Unable to load posts</h3>
+                    <p>Make sure posts.json exists in the same directory as this HTML file.</p>
+                    <p>Example posts.json structure:</p>
+                    <pre>[
+  {
+    "id": "1",
+    "title": "My First Post",
+    "date": "2025-08-23",
+    "excerpt": "This is a preview of my first post...",
+    "content": "# Hello World\\n\\nThis is my **first** blog post!"
+  }
+]</pre>
+                </div>
+            `;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Load posts when page loads
+        loadPosts();
+    </script>
+</body>
+</html>
