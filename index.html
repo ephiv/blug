@@ -374,16 +374,38 @@
             margin: 20px 0;
         }
 
-        /* Override Prism.js styles to match your theme */
+        /* Override Prism.js styles to match your actual color scheme */
+        code[class*="language-"],
+        pre[class*="language-"] {
+            color: #111111 !important;
+            background: none !important;
+            text-shadow: none !important;
+            font-family: 'Courier New', monospace !important;
+            font-size: inherit !important;
+            line-height: 1.5 !important;
+        }
+
+        pre[class*="language-"] {
+            padding: 15px !important;
+            margin: 15px 0 !important;
+            overflow: auto !important;
+            background-color: #f8f4f0 !important;
+            border: 1px solid #aaa39e !important;
+        }
+
+        /* Token colors using your palette + interpolated colors */
         .token.comment,
         .token.prolog,
         .token.doctype,
         .token.cdata {
-            color: #8d937f;
+            color: #aaa39e !important;
+            background: none !important;
+            font-style: italic !important;
         }
 
         .token.punctuation {
-            color: #445767;
+            color: #5c524c !important;
+            background: none !important;
         }
 
         .token.property,
@@ -393,7 +415,8 @@
         .token.constant,
         .token.symbol,
         .token.deleted {
-            color: #d73a49;
+            color: #981d34 !important;
+            background: none !important;
         }
 
         .token.selector,
@@ -402,7 +425,8 @@
         .token.char,
         .token.builtin,
         .token.inserted {
-            color: #032f62;
+            color: #7a3840 !important;
+            background: none !important;
         }
 
         .token.operator,
@@ -410,24 +434,76 @@
         .token.url,
         .language-css .token.string,
         .style .token.string {
-            color: #e36209;
+            color: #5c524c !important;
+            background: none !important;
         }
 
         .token.atrule,
         .token.attr-value,
         .token.keyword {
-            color: #d73a49;
+            color: #551723 !important;
+            background: none !important;
+            font-weight: bold !important;
         }
 
         .token.function,
         .token.class-name {
-            color: #6f42c1;
+            color: #7a3840 !important;
+            background: none !important;
+            font-weight: bold !important;
         }
 
         .token.regex,
         .token.important,
         .token.variable {
-            color: #e36209;
+            color: #981d34 !important;
+            background: none !important;
+        }
+
+        /* Python-specific tokens */
+        .language-python .token.keyword {
+            color: #551723 !important;
+        }
+
+        .language-python .token.function {
+            color: #7a3840 !important;
+        }
+
+        .language-python .token.builtin {
+            color: #981d34 !important;
+        }
+
+        /* C/C++ specific tokens */
+        .language-c .token.keyword,
+        .language-cpp .token.keyword {
+            color: #551723 !important;
+        }
+
+        .language-c .token.function,
+        .language-cpp .token.function {
+            color: #7a3840 !important;
+        }
+
+        .language-c .token.directive,
+        .language-cpp .token.directive {
+            color: #981d34 !important;
+        }
+
+        /* Remove any highlighting backgrounds */
+        .token.operator,
+        .token.punctuation,
+        .token.important {
+            background: none !important;
+        }
+
+        /* Inline code styling */
+        .post-content code:not([class*="language-"]),
+        .preview-pane code:not([class*="language-"]) {
+            background-color: #f3e4d7 !important;
+            color: #111111 !important;
+            padding: 2px 4px !important;
+            font-family: 'Courier New', monospace !important;
+            border: 1px solid #aaa39e !important;
         }
 
         .loading {
@@ -562,20 +638,8 @@
         const jsonOutput = document.getElementById('json-output');
         const copyJsonBtn = document.getElementById('copy-json');
 
-        // Configure marked with custom renderer for Prism.js
-        const renderer = new marked.Renderer();
-
-        // Override code block rendering to add language classes
-        renderer.code = function(code, language, escaped) {
-            const validLang = language && language.match(/\S*/)[0];
-            if (validLang) {
-                return `<pre><code class="language-${validLang}">${code}</code></pre>`;
-            }
-            return `<pre><code>${code}</code></pre>`;
-        };
-
+        // Configure marked
         marked.setOptions({
-            renderer: renderer,
             breaks: true,
             gfm: true
         });
@@ -672,8 +736,10 @@
         function updatePreview() {
             const markdown = markdownEditor.value;
             markdownPreview.innerHTML = marked.parse(markdown);
-            // Apply syntax highlighting to the preview
-            Prism.highlightAllUnder(markdownPreview);
+            // Apply syntax highlighting to preview with a small delay
+            setTimeout(() => {
+                Prism.highlightAllUnder(markdownPreview);
+            }, 50);
             updateJsonOutput();
         }
 
@@ -747,8 +813,10 @@
             const postsHtml = posts.map(post => createPostHTML(post)).join('');
             postsContainer.innerHTML = postsHtml;
 
-            // Apply syntax highlighting to all code blocks
-            Prism.highlightAllUnder(postsContainer);
+            // Apply syntax highlighting to all code blocks after rendering
+            setTimeout(() => {
+                Prism.highlightAllUnder(postsContainer);
+            }, 100);
 
             // Add click handlers for post expansion
             document.querySelectorAll('.post-preview').forEach(preview => {
