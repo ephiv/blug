@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>blug</title>
+    <!-- Prism.js CSS for syntax highlighting -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
     <style>
         * {
             margin: 0;
@@ -372,6 +374,62 @@
             margin: 20px 0;
         }
 
+        /* Override Prism.js styles to match your theme */
+        .token.comment,
+        .token.prolog,
+        .token.doctype,
+        .token.cdata {
+            color: #8d937f;
+        }
+
+        .token.punctuation {
+            color: #445767;
+        }
+
+        .token.property,
+        .token.tag,
+        .token.boolean,
+        .token.number,
+        .token.constant,
+        .token.symbol,
+        .token.deleted {
+            color: #d73a49;
+        }
+
+        .token.selector,
+        .token.attr-name,
+        .token.string,
+        .token.char,
+        .token.builtin,
+        .token.inserted {
+            color: #032f62;
+        }
+
+        .token.operator,
+        .token.entity,
+        .token.url,
+        .language-css .token.string,
+        .style .token.string {
+            color: #e36209;
+        }
+
+        .token.atrule,
+        .token.attr-value,
+        .token.keyword {
+            color: #d73a49;
+        }
+
+        .token.function,
+        .token.class-name {
+            color: #6f42c1;
+        }
+
+        .token.regex,
+        .token.important,
+        .token.variable {
+            color: #e36209;
+        }
+
         .loading {
             text-align: center;
             color: #8d937f;
@@ -472,6 +530,10 @@
         </main>
     </div>
 
+    <!-- Prism.js script for syntax highlighting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+
     <script type="module">
         import { marked } from 'https://cdnjs.cloudflare.com/ajax/libs/marked/16.2.0/lib/marked.esm.js';
 
@@ -500,8 +562,20 @@
         const jsonOutput = document.getElementById('json-output');
         const copyJsonBtn = document.getElementById('copy-json');
 
-        // Configure marked
+        // Configure marked with custom renderer for Prism.js
+        const renderer = new marked.Renderer();
+
+        // Override code block rendering to add language classes
+        renderer.code = function(code, language, escaped) {
+            const validLang = language && language.match(/\S*/)[0];
+            if (validLang) {
+                return `<pre><code class="language-${validLang}">${code}</code></pre>`;
+            }
+            return `<pre><code>${code}</code></pre>`;
+        };
+
         marked.setOptions({
+            renderer: renderer,
             breaks: true,
             gfm: true
         });
@@ -598,6 +672,8 @@
         function updatePreview() {
             const markdown = markdownEditor.value;
             markdownPreview.innerHTML = marked.parse(markdown);
+            // Apply syntax highlighting to the preview
+            Prism.highlightAllUnder(markdownPreview);
             updateJsonOutput();
         }
 
@@ -645,7 +721,7 @@
             }
         });
 
-        // Blog posts functionality (unchanged from original)
+        // Blog posts functionality
         async function loadPosts() {
             try {
                 const response = await fetch('./posts.json');
@@ -670,6 +746,9 @@
 
             const postsHtml = posts.map(post => createPostHTML(post)).join('');
             postsContainer.innerHTML = postsHtml;
+
+            // Apply syntax highlighting to all code blocks
+            Prism.highlightAllUnder(postsContainer);
 
             // Add click handlers for post expansion
             document.querySelectorAll('.post-preview').forEach(preview => {
@@ -712,6 +791,8 @@
             } else {
                 content.classList.add('expanded');
                 indicator.textContent = '−';
+                // Apply syntax highlighting when post is expanded
+                Prism.highlightAllUnder(content);
             }
         }
 
