@@ -5,7 +5,7 @@
     "date": "2025-08-23",
     "excerpt": "markdown testing",
     "content": "# hello\n\nwe be testing **markdown**:\n\n## basics\n\n- **big black bold wide fat**\n- *slim jim micheal jackson*\n- `inline code`\n- [linky link link](https://example.com)\n\n```c\nint main() {\n    std::cout << \"Hello World\" << std::endl;\n}\n```\n\n> blockquote go brr\n\nok i hope it looks good and not stupid ok bye!!"
-  }
+  },
   {
     "id": "2",
     "title": "weekdays",
