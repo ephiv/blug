@@ -43,7 +43,7 @@
         .subtitle {
             font-size: 0.9rem;
             margin-top: 10px;
-            color: #8d937f;
+            color: #666358;
         }
 
         .auth-section {
@@ -79,7 +79,7 @@
 
         .auth-status {
             font-size: 0.8rem;
-            color: #8d937f;
+            color: #666358;
         }
 
         .create-section {
@@ -251,12 +251,12 @@
 
         .post-date {
             font-size: 0.8rem;
-            color: #8d937f;
+            color: #666358;
         }
 
         .post-excerpt {
             padding: 20px 20px 20px;
-            color: #8d937f;
+            color: #666358;
         }
 
         .post-content {
@@ -278,7 +278,7 @@
 
         .no-posts {
             text-align: center;
-            color: #8d937f;
+            color: #666358;
             font-style: italic;
             padding: 40px;
             border: 1px solid #445767;
@@ -325,7 +325,7 @@
             border-left: 3px solid #445767;
             padding-left: 15px;
             margin: 15px 0;
-            color: #8d937f;
+            color: #666358;
             font-style: italic;
         }
 
@@ -333,13 +333,13 @@
             background-color: #bdbccb;
             padding: 2px 4px;
             font-family: 'Courier New', monospace;
-            border: 1px solid #8d937f;
+            border: 1px solid #666358;
         }
 
         .post-content pre, .preview-pane pre {
             background-color: #bdbccb;
             padding: 15px;
-            border: 1px solid #8d937f;
+            border: 1px solid #666358;
             overflow-x: auto;
             margin: 15px 0;
         }
@@ -496,7 +496,7 @@
             background: none !important;
         }
 
-        /* Inline code styling */
+        /* Inline code styling - keep the bright yellowish highlight */
         .post-content code:not([class*="language-"]),
         .preview-pane code:not([class*="language-"]) {
             background-color: #f3e4d7 !important;
@@ -506,15 +506,33 @@
             border: 1px solid #aaa39e !important;
         }
 
+        /* Plain code blocks (no language specified) - no background modifications */
+        .post-content pre:not([class*="language-"]),
+        .preview-pane pre:not([class*="language-"]) {
+            background-color: #bdbccb !important; /* Use your original code block color */
+            border: 1px solid #666358 !important; /* Use your original border color */
+            padding: 15px !important;
+            margin: 15px 0 !important;
+            overflow-x: auto !important;
+        }
+
+        .post-content pre:not([class*="language-"]) code,
+        .preview-pane pre:not([class*="language-"]) code {
+            background: none !important;
+            border: none !important;
+            padding: 0 !important;
+            color: #1a1a1a !important; /* Use your original text color */
+        }
+
         .loading {
             text-align: center;
-            color: #8d937f;
+            color: #666358;
             padding: 40px;
         }
 
         .error {
             text-align: center;
-            color: #8d937f;
+            color: #666358;
             padding: 40px;
             border: 1px solid #445767;
             background-color: #bdbccb;
