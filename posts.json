@@ -6,4 +6,11 @@
     "excerpt": "markdown testing",
     "content": "# hello\n\nwe be testing **markdown**:\n\n## basics\n\n- **big black bold wide fat**\n- *slim jim micheal jackson*\n- `inline code`\n- [linky link link](https://example.com)\n\n```c\nint main() {\n    std::cout << \"Hello World\" << std::endl;\n}\n```\n\n> blockquote go brr\n\nok i hope it looks good and not stupid ok bye!!"
   }
+  {
+    "id": "2",
+    "title": "weekdays",
+    "date": "2025-08-24",
+    "excerpt": "how yall getting days of the week using the date",
+    "content": "```py\ndef dayOfWeek(year, month, day):\n    t = [0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4]\n\n    if month < 3:\n        year -= 1\n\n    return (year + year // 4 - year // 100 + year // 400 + t[month - 1] + day) % 7\n\nmapping = [\"Sunday\", \"Monday\", \"Tuesday\", \"Wednesday\", \"Thursday\", \"Friday\", \"Saturday\"]\nprint(mapping[dayOfWeek(2025, 8, 24)])```\n\nthis is called uhh the tomohiko sakamoto's algorithm.\nim too lazy to express your concepts in text so here's this.\n```py\nimport math\n\nC = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334] # days before month\n\ndef totaldays(y, m, d):\n    return 365*y + math.floor(y/4) - math.floor(y/100) + math.floor(y/400) + C[m] + (d - 1)\n\nprint(f\"Total days since 2025-08-24 if all years are non-leap years are: {totaldays(2025, 8, 24)}\")\n```\n```\n[fivy@archlinux playground]$ venv/bin/python main.py\nTotal days since 2025-08-24 if all years are non-leap years are: 739882\n```\nthis is correct, it has been 739882 days since 0000-01-01 if all years were common."
+  }
 ]
