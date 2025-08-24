@@ -28,6 +28,7 @@
             border-bottom: 2px solid #445767;
             padding-bottom: 20px;
             margin-bottom: 40px;
+            position: relative;
         }
 
         h1 {
@@ -41,6 +42,186 @@
             font-size: 0.9rem;
             margin-top: 10px;
             color: #8d937f;
+        }
+
+        .auth-section {
+            position: absolute;
+            top: 0;
+            right: 0;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .auth-input {
+            padding: 5px 10px;
+            border: 1px solid #445767;
+            background-color: #bdbccb;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+        }
+
+        .auth-button, .create-button, .editor-button {
+            padding: 5px 15px;
+            border: 1px solid #445767;
+            background-color: #bdbccb;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .auth-button:hover, .create-button:hover, .editor-button:hover {
+            background-color: #eeddff;
+        }
+
+        .auth-status {
+            font-size: 0.8rem;
+            color: #8d937f;
+        }
+
+        .create-section {
+            display: none;
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #445767;
+            background-color: #bdbccb;
+        }
+
+        .create-section.visible {
+            display: block;
+        }
+
+        .editor-container {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .editor-container.visible {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #445767;
+            background-color: #d7d7de;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        .form-textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 10px;
+            border: 1px solid #445767;
+            background-color: #d7d7de;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            resize: vertical;
+        }
+
+        .editor-toolbar {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #445767;
+            background-color: #bdbccb;
+            flex-wrap: wrap;
+        }
+
+        .toolbar-button {
+            padding: 5px 10px;
+            border: 1px solid #445767;
+            background-color: #d7d7de;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .toolbar-button:hover {
+            background-color: #eeddff;
+        }
+
+        .editor-area {
+            display: flex;
+            gap: 20px;
+        }
+
+        .editor-pane, .preview-pane {
+            flex: 1;
+        }
+
+        .editor-pane textarea {
+            width: 100%;
+            min-height: 300px;
+            padding: 15px;
+            border: 1px solid #445767;
+            background-color: #d7d7de;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            resize: vertical;
+            white-space: pre-wrap;
+        }
+
+        .preview-pane {
+            border: 1px solid #445767;
+            background-color: #d7d7de;
+            padding: 15px;
+            height: 300px;
+            overflow-y: auto;
+        }
+
+        .preview-label, .editor-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .json-output {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #445767;
+            background-color: #bdbccb;
+        }
+
+        .json-textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 10px;
+            border: 1px solid #445767;
+            background-color: #d7d7de;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            resize: vertical;
+        }
+
+        .copy-button {
+            margin-top: 10px;
+            padding: 8px 15px;
+            border: 1px solid #445767;
+            background-color: #d7d7de;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .copy-button:hover {
+            background-color: #eeddff;
         }
 
         .post-preview {
@@ -103,42 +284,42 @@
         }
 
         /* Markdown content styling */
-        .post-content h1,
-        .post-content h2,
-        .post-content h3,
-        .post-content h4,
-        .post-content h5,
-        .post-content h6 {
+        .post-content h1, .preview-pane h1,
+        .post-content h2, .preview-pane h2,
+        .post-content h3, .preview-pane h3,
+        .post-content h4, .preview-pane h4,
+        .post-content h5, .preview-pane h5,
+        .post-content h6, .preview-pane h6 {
             margin: 20px 0 10px;
             font-weight: bold;
         }
 
-        .post-content h1 {
+        .post-content h1, .preview-pane h1 {
             font-size: 1.5rem;
             border-bottom: 2px solid #445767;
             padding-bottom: 5px;
         }
 
-        .post-content h2 {
+        .post-content h2, .preview-pane h2 {
             font-size: 1.3rem;
             border-bottom: 1px solid #445767;
             padding-bottom: 3px;
         }
 
-        .post-content p {
+        .post-content p, .preview-pane p {
             margin-bottom: 15px;
         }
 
-        .post-content ul,
-        .post-content ol {
+        .post-content ul, .preview-pane ul,
+        .post-content ol, .preview-pane ol {
             margin: 15px 0 15px 20px;
         }
 
-        .post-content li {
+        .post-content li, .preview-pane li {
             margin-bottom: 5px;
         }
 
-        .post-content blockquote {
+        .post-content blockquote, .preview-pane blockquote {
             border-left: 3px solid #445767;
             padding-left: 15px;
             margin: 15px 0;
@@ -146,14 +327,14 @@
             font-style: italic;
         }
 
-        .post-content code {
+        .post-content code, .preview-pane code {
             background-color: #bdbccb;
             padding: 2px 4px;
             font-family: 'Courier New', monospace;
             border: 1px solid #8d937f;
         }
 
-        .post-content pre {
+        .post-content pre, .preview-pane pre {
             background-color: #bdbccb;
             padding: 15px;
             border: 1px solid #8d937f;
@@ -161,31 +342,31 @@
             margin: 15px 0;
         }
 
-        .post-content pre code {
+        .post-content pre code, .preview-pane pre code {
             background: none;
             border: none;
             padding: 0;
         }
 
-        .post-content a {
+        .post-content a, .preview-pane a {
             color: #445767;
             text-decoration: underline;
         }
 
-        .post-content a:hover {
+        .post-content a:hover, .preview-pane a:hover {
             background-color: #1a1a1a;
             color: #d7d7de;
         }
 
-        .post-content strong {
+        .post-content strong, .preview-pane strong {
             font-weight: bold;
         }
 
-        .post-content em {
+        .post-content em, .preview-pane em {
             font-style: italic;
         }
 
-        .post-content hr {
+        .post-content hr, .preview-pane hr {
             border: none;
             border-top: 1px solid #445767;
             margin: 20px 0;
@@ -204,6 +385,19 @@
             border: 1px solid #445767;
             background-color: #bdbccb;
         }
+
+        @media (max-width: 768px) {
+            .auth-section {
+                position: static;
+                margin-top: 20px;
+                justify-content: flex-start;
+                flex-wrap: wrap;
+            }
+
+            .editor-area {
+                flex-direction: column;
+            }
+        }
     </style>
 </head>
 <body>
@@ -211,7 +405,67 @@
         <header>
             <h1>blug</h1>
             <p class="subtitle">a minimal blog (im too lazy to make a real one)</p>
+
+            <div class="auth-section">
+                <div id="auth-form">
+                    <input type="password" id="password-input" class="auth-input" placeholder="enter password">
+                    <button id="auth-button" class="auth-button">login</button>
+                </div>
+                <div id="auth-status" class="auth-status" style="display: none;"></div>
+            </div>
         </header>
+
+        <div id="create-section" class="create-section">
+            <h3>create new post</h3>
+            <button id="toggle-editor" class="create-button">start writing</button>
+
+            <div id="editor-container" class="editor-container">
+                <div class="form-group">
+                    <label class="form-label" for="post-id">id:</label>
+                    <input type="text" id="post-id" class="form-input" placeholder="enter post id (or leave blank for auto)">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="post-title">title:</label>
+                    <input type="text" id="post-title" class="form-input" placeholder="enter post title">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="post-excerpt">excerpt:</label>
+                    <textarea id="post-excerpt" class="form-textarea" placeholder="brief preview of your post..."></textarea>
+                </div>
+
+                <div class="editor-toolbar">
+                    <button class="toolbar-button" data-action="bold">**bold**</button>
+                    <button class="toolbar-button" data-action="italic">*italic*</button>
+                    <button class="toolbar-button" data-action="strikethrough">~~strike~~</button>
+                    <button class="toolbar-button" data-action="code">`code`</button>
+                    <button class="toolbar-button" data-action="link">[link](url)</button>
+                    <button class="toolbar-button" data-action="h1"># h1</button>
+                    <button class="toolbar-button" data-action="h2">## h2</button>
+                    <button class="toolbar-button" data-action="quote">> quote</button>
+                    <button class="toolbar-button" data-action="list">- list</button>
+                    <button class="toolbar-button" data-action="codeblock">```code```</button>
+                </div>
+
+                <div class="editor-area">
+                    <div class="editor-pane">
+                        <label class="editor-label">markdown editor:</label>
+                        <textarea id="markdown-editor" placeholder="write your post in markdown..."></textarea>
+                    </div>
+                    <div class="preview-pane">
+                        <label class="preview-label">live preview:</label>
+                        <div id="markdown-preview"></div>
+                    </div>
+                </div>
+
+                <div class="json-output">
+                    <h4>generated json (copy this to add to posts.json):</h4>
+                    <textarea id="json-output" class="json-textarea" readonly></textarea>
+                    <button id="copy-json" class="copy-button">copy to clipboard</button>
+                </div>
+            </div>
+        </div>
 
         <main id="blog-posts">
             <div class="loading">...</div>
@@ -221,14 +475,177 @@
     <script type="module">
         import { marked } from 'https://cdnjs.cloudflare.com/ajax/libs/marked/16.2.0/lib/marked.esm.js';
 
+        // Simple password (change this to whatever you want)
+        const OWNER_PASSWORD = 'pascalstriangle35601111';
+
+        let isAuthenticated = false;
+        let posts = [];
+
+        // DOM elements
+        const passwordInput = document.getElementById('password-input');
+        const authButton = document.getElementById('auth-button');
+        const authForm = document.getElementById('auth-form');
+        const authStatus = document.getElementById('auth-status');
+        const createSection = document.getElementById('create-section');
+        const toggleEditorBtn = document.getElementById('toggle-editor');
+        const editorContainer = document.getElementById('editor-container');
         const postsContainer = document.getElementById('blog-posts');
 
-        // Configure marked for better security
+        // Editor elements
+        const postIdInput = document.getElementById('post-id');
+        const postTitleInput = document.getElementById('post-title');
+        const postExcerptInput = document.getElementById('post-excerpt');
+        const markdownEditor = document.getElementById('markdown-editor');
+        const markdownPreview = document.getElementById('markdown-preview');
+        const jsonOutput = document.getElementById('json-output');
+        const copyJsonBtn = document.getElementById('copy-json');
+
+        // Configure marked
         marked.setOptions({
             breaks: true,
             gfm: true
         });
 
+        // Authentication
+        authButton.addEventListener('click', handleAuth);
+        passwordInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') handleAuth();
+        });
+
+        function handleAuth() {
+            const password = passwordInput.value;
+
+            if (password === OWNER_PASSWORD) {
+                isAuthenticated = true;
+                authForm.style.display = 'none';
+                authStatus.style.display = 'block';
+                authStatus.textContent = 'authenticated as owner';
+                createSection.classList.add('visible');
+            } else {
+                alert('incorrect password');
+                passwordInput.value = '';
+            }
+        }
+
+        // Editor functionality
+        toggleEditorBtn.addEventListener('click', () => {
+            editorContainer.classList.toggle('visible');
+            toggleEditorBtn.textContent = editorContainer.classList.contains('visible')
+                ? 'hide editor' : 'start writing';
+        });
+
+        // Toolbar buttons
+        document.querySelectorAll('.toolbar-button').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const action = e.target.getAttribute('data-action');
+                insertMarkdown(action);
+            });
+        });
+
+        function insertMarkdown(action) {
+            const editor = markdownEditor;
+            const start = editor.selectionStart;
+            const end = editor.selectionEnd;
+            const selectedText = editor.value.substring(start, end);
+            let replacement = '';
+
+            switch (action) {
+                case 'bold':
+                    replacement = `**${selectedText || 'bold text'}**`;
+                    break;
+                case 'italic':
+                    replacement = `*${selectedText || 'italic text'}*`;
+                    break;
+                case 'strikethrough':
+                    replacement = `~~${selectedText || 'strikethrough text'}~~`;
+                    break;
+                case 'code':
+                    replacement = `\`${selectedText || 'code'}\``;
+                    break;
+                case 'link':
+                    replacement = `[${selectedText || 'link text'}](url)`;
+                    break;
+                case 'h1':
+                    replacement = `# ${selectedText || 'heading'}`;
+                    break;
+                case 'h2':
+                    replacement = `## ${selectedText || 'heading'}`;
+                    break;
+                case 'quote':
+                    replacement = `> ${selectedText || 'quote'}`;
+                    break;
+                case 'list':
+                    replacement = `- ${selectedText || 'list item'}`;
+                    break;
+                case 'codeblock':
+                    replacement = `\`\`\`\n${selectedText || 'code here'}\n\`\`\``;
+                    break;
+            }
+
+            editor.value = editor.value.substring(0, start) + replacement + editor.value.substring(end);
+            editor.focus();
+
+            // Update preview
+            updatePreview();
+        }
+
+        // Live preview update
+        markdownEditor.addEventListener('input', updatePreview);
+        postIdInput.addEventListener('input', updateJsonOutput);
+        postTitleInput.addEventListener('input', updateJsonOutput);
+        postExcerptInput.addEventListener('input', updateJsonOutput);
+
+        function updatePreview() {
+            const markdown = markdownEditor.value;
+            markdownPreview.innerHTML = marked.parse(markdown);
+            updateJsonOutput();
+        }
+
+        function updateJsonOutput() {
+            const customId = postIdInput.value.trim();
+            const title = postTitleInput.value.trim();
+            const excerpt = postExcerptInput.value.trim();
+            const content = markdownEditor.value.trim();
+
+            if (!title && !excerpt && !content) {
+                jsonOutput.value = '';
+                return;
+            }
+
+            const postId = customId || generateId();
+            const currentDate = new Date().toISOString().split('T')[0];
+
+            const postObject = {
+                id: postId,
+                title: title || 'untitled post',
+                date: currentDate,
+                excerpt: excerpt || 'no excerpt provided',
+                content: content || '# empty post\n\nno content yet...'
+            };
+
+            jsonOutput.value = JSON.stringify(postObject, null, 2);
+        }
+
+        function generateId() {
+            const maxId = posts.length > 0 ? Math.max(...posts.map(p => parseInt(p.id))) : 0;
+            return (maxId + 1).toString();
+        }
+
+        // Copy to clipboard
+        copyJsonBtn.addEventListener('click', async () => {
+            try {
+                await navigator.clipboard.writeText(jsonOutput.value);
+                const originalText = copyJsonBtn.textContent;
+                copyJsonBtn.textContent = 'copied!';
+                setTimeout(() => {
+                    copyJsonBtn.textContent = originalText;
+                }, 2000);
+            } catch (err) {
+                alert('failed to copy to clipboard');
+            }
+        });
+
+        // Blog posts functionality (unchanged from original)
         async function loadPosts() {
             try {
                 const response = await fetch('./posts.json');
@@ -237,7 +654,7 @@
                     throw new Error('Failed to load posts');
                 }
 
-                const posts = await response.json();
+                posts = await response.json();
                 renderPosts(posts);
             } catch (error) {
                 console.error('Error loading posts:', error);
