@@ -665,8 +665,8 @@
                 <!-- We’ll populate months/years dynamically -->
             </select>
             <select id="sort-order">
-                <option value="desc">Newest first</option>
                 <option value="asc">Oldest first</option>
+                <option value="desc">Newest first</option>
             </select>
         </div>
 
@@ -877,14 +877,21 @@
         }
 
         function applyFilters() {
-            const query = searchInput.value.toLowerCase();
-            const filterValue = filterDate.value; // "YYYY-MM" or full date
+            let query = searchInput.value.trim().toLowerCase();
+            const filterValue = filterDate.value; // "YYYY-MM"
             const order = sortOrder.value;
 
             let filtered = posts.filter(post => {
-                const haystack = (post.title + ' ' + post.excerpt + ' ' + post.content).toLowerCase();
-                if (query && !haystack.includes(query)) return false;
+                // Special case: search for id
+                if (query.startsWith('id=')) {
+                    const targetId = query.replace(/^id=#?/, '').trim();
+                    if (post.id.toLowerCase() !== targetId) return false;
+                } else if (query) {
+                    const haystack = (post.title + ' ' + post.excerpt + ' ' + post.content).toLowerCase();
+                    if (!haystack.includes(query)) return false;
+                }
 
+                // Date filter
                 if (filterValue) {
                     const postMonth = post.date.slice(0,7); // "YYYY-MM"
                     if (!postMonth.startsWith(filterValue)) return false;
@@ -893,6 +900,7 @@
                 return true;
             });
 
+            // Sort
             filtered.sort((a, b) => {
                 if (order === 'asc') {
                     return new Date(a.date) - new Date(b.date);
@@ -903,6 +911,7 @@
 
             renderPosts(filtered);
         }
+
 
         function populateFilterOptions(posts) {
             const months = new Set(posts.map(p => p.date.slice(0,7))); // "YYYY-MM"
