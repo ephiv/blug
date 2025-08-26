@@ -43,7 +43,7 @@
         .subtitle {
             font-size: 0.9rem;
             margin-top: 10px;
-            color: #8d937f;
+            color: #111111;
         }
 
         .auth-section {
@@ -251,12 +251,12 @@
 
         .post-date {
             font-size: 0.8rem;
-            color: #8d937f;
+            color: #111111;
         }
 
         .post-excerpt {
             padding: 20px 20px 20px;
-            color: #8d937f;
+            color: #111111;
         }
 
         .post-content {
@@ -523,6 +523,28 @@
             padding: 0 !important;
             color: #1a1a1a !important; /* Use your original text color */
         }
+
+        .code-block {
+            position: relative;
+        }
+
+        .copy-code-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: #d7d7de;
+            border: 1px solid #445767;
+            padding: 4px 8px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .code-block:hover .copy-code-btn {
+            opacity: 1;
+        }
+
 
         .loading {
             text-align: center;
@@ -831,10 +853,41 @@
             const postsHtml = posts.map(post => createPostHTML(post)).join('');
             postsContainer.innerHTML = postsHtml;
 
+            // Add copy buttons to each code block
+            postsContainer.querySelectorAll('pre code').forEach(codeEl => {
+                const pre = codeEl.parentElement;
+                if (!pre.classList.contains('has-copy')) {
+                    const wrapper = document.createElement('div');
+                    wrapper.classList.add('code-block');
+                    pre.parentNode.insertBefore(wrapper, pre);
+                    wrapper.appendChild(pre);
+
+                    const button = document.createElement('button');
+                    button.className = 'copy-code-btn';
+                    button.innerHTML = '📋'; // clipboard icon
+                    wrapper.appendChild(button);
+
+                    button.addEventListener('click', async () => {
+                        try {
+                            await navigator.clipboard.writeText(codeEl.textContent);
+                            button.innerHTML = '✔️'; // checkmark
+                            setTimeout(() => button.innerHTML = '📋', 2000);
+                        } catch {
+                            button.innerHTML = '❌';
+                            setTimeout(() => button.innerHTML = '📋', 2000);
+                        }
+                    });
+
+                    pre.classList.add('has-copy');
+                }
+            });
+
             // Apply syntax highlighting to all code blocks after rendering
             setTimeout(() => {
                 Prism.highlightAllUnder(postsContainer);
+                addCopyButtons();
             }, 100);
+
 
             // Add click handlers for post expansion
             document.querySelectorAll('.post-preview').forEach(preview => {
