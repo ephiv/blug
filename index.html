@@ -890,9 +890,13 @@
 
 
             // Add click handlers for post expansion
-            document.querySelectorAll('.post-preview').forEach(preview => {
-                preview.addEventListener('click', togglePost);
-            });
+            document.querySelectorAll('.post-preview .post-header, .post-preview .post-excerpt')
+                .forEach(el => {
+                    el.addEventListener('click', (e) => {
+                        const preview = e.currentTarget.closest('.post-preview');
+                        togglePost(preview);
+                    });
+                });
         }
 
         function createPostHTML(post) {
