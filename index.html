@@ -923,8 +923,7 @@
             `;
         }
 
-        function togglePost(event) {
-            const preview = event.currentTarget;
+        function togglePost(preview) {
             const content = preview.querySelector('.post-content');
             const indicator = preview.querySelector('.expand-indicator');
 
@@ -934,10 +933,10 @@
             } else {
                 content.classList.add('expanded');
                 indicator.textContent = '−';
-                // Apply syntax highlighting when post is expanded
                 Prism.highlightAllUnder(content);
             }
         }
+
 
         function showNoPosts() {
             postsContainer.innerHTML = `
