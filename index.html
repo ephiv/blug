@@ -43,7 +43,7 @@
         .subtitle {
             font-size: 0.9rem;
             margin-top: 10px;
-            color: #666358;
+            color: #8d937f;
         }
 
         .auth-section {
@@ -79,7 +79,7 @@
 
         .auth-status {
             font-size: 0.8rem;
-            color: #666358;
+            color: #8d937f;
         }
 
         .create-section {
@@ -92,6 +92,73 @@
 
         .create-section.visible {
             display: block;
+        }
+
+        .controls-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #445767;
+            background-color: #bdbccb;
+        }
+
+        .controls-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            align-items: flex-end;
+            flex-wrap: wrap;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            min-width: 150px;
+        }
+
+        .control-label {
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #1a1a1a;
+        }
+
+        .search-input, .filter-select, .sort-select {
+            padding: 8px 10px;
+            border: 1px solid #445767;
+            background-color: #d7d7de;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        .search-input {
+            min-width: 200px;
+        }
+
+        .clear-button {
+            padding: 8px 15px;
+            border: 1px solid #445767;
+            background-color: #d7d7de;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            align-self: flex-end;
+        }
+
+        .clear-button:hover {
+            background-color: #eeddff;
+        }
+
+        .results-info {
+            margin-top: 10px;
+            font-size: 0.8rem;
+            color: #8d937f;
+        }
+
+        .highlight {
+            background-color: #f3e4d7;
+            padding: 1px 2px;
+            border-radius: 2px;
         }
 
         .editor-container {
@@ -251,12 +318,12 @@
 
         .post-date {
             font-size: 0.8rem;
-            color: #666358;
+            color: #8d937f;
         }
 
         .post-excerpt {
             padding: 20px 20px 20px;
-            color: #666358;
+            color: #8d937f;
         }
 
         .post-content {
@@ -278,7 +345,7 @@
 
         .no-posts {
             text-align: center;
-            color: #666358;
+            color: #8d937f;
             font-style: italic;
             padding: 40px;
             border: 1px solid #445767;
@@ -325,7 +392,7 @@
             border-left: 3px solid #445767;
             padding-left: 15px;
             margin: 15px 0;
-            color: #666358;
+            color: #8d937f;
             font-style: italic;
         }
 
@@ -333,13 +400,13 @@
             background-color: #bdbccb;
             padding: 2px 4px;
             font-family: 'Courier New', monospace;
-            border: 1px solid #666358;
+            border: 1px solid #8d937f;
         }
 
         .post-content pre, .preview-pane pre {
             background-color: #bdbccb;
             padding: 15px;
-            border: 1px solid #666358;
+            border: 1px solid #8d937f;
             overflow-x: auto;
             margin: 15px 0;
         }
@@ -510,7 +577,7 @@
         .post-content pre:not([class*="language-"]),
         .preview-pane pre:not([class*="language-"]) {
             background-color: #bdbccb !important; /* Use your original code block color */
-            border: 1px solid #666358 !important; /* Use your original border color */
+            border: 1px solid #8d937f !important; /* Use your original border color */
             padding: 15px !important;
             margin: 15px 0 !important;
             overflow-x: auto !important;
@@ -526,13 +593,13 @@
 
         .loading {
             text-align: center;
-            color: #666358;
+            color: #8d937f;
             padding: 40px;
         }
 
         .error {
             text-align: center;
-            color: #666358;
+            color: #8d937f;
             padding: 40px;
             border: 1px solid #445767;
             background-color: #bdbccb;
@@ -548,6 +615,15 @@
 
             .editor-area {
                 flex-direction: column;
+            }
+
+            .controls-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .control-group {
+                min-width: auto;
             }
         }
     </style>
@@ -619,6 +695,34 @@
             </div>
         </div>
 
+        <div class="controls-section">
+            <div class="controls-row">
+                <div class="control-group">
+                    <label class="control-label">search:</label>
+                    <input type="text" id="search-input" class="search-input" placeholder="search posts...">
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label">filter by date:</label>
+                    <select id="date-filter" class="filter-select">
+                        <option value="">all dates</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label">sort by:</label>
+                    <select id="sort-select" class="sort-select">
+                        <option value="newest">newest first</option>
+                        <option value="oldest">oldest first</option>
+                    </select>
+                </div>
+
+                <button id="clear-filters" class="clear-button">clear all</button>
+            </div>
+
+            <div id="results-info" class="results-info"></div>
+        </div>
+
         <main id="blog-posts">
             <div class="loading">...</div>
         </main>
@@ -636,6 +740,10 @@
 
         let isAuthenticated = false;
         let posts = [];
+        let filteredPosts = [];
+        let currentSearch = '';
+        let currentDateFilter = '';
+        let currentSort = 'newest';
 
         // DOM elements
         const passwordInput = document.getElementById('password-input');
@@ -655,6 +763,13 @@
         const markdownPreview = document.getElementById('markdown-preview');
         const jsonOutput = document.getElementById('json-output');
         const copyJsonBtn = document.getElementById('copy-json');
+
+        // Control elements
+        const searchInput = document.getElementById('search-input');
+        const dateFilter = document.getElementById('date-filter');
+        const sortSelect = document.getElementById('sort-select');
+        const clearFiltersBtn = document.getElementById('clear-filters');
+        const resultsInfo = document.getElementById('results-info');
 
         // Configure marked
         marked.setOptions({
@@ -805,6 +920,163 @@
             }
         });
 
+        // Search and filter functionality
+        searchInput.addEventListener('input', handleSearch);
+        dateFilter.addEventListener('change', handleDateFilter);
+        sortSelect.addEventListener('change', handleSort);
+        clearFiltersBtn.addEventListener('click', clearAllFilters);
+
+        function handleSearch() {
+            currentSearch = searchInput.value.trim();
+            applyFilters();
+        }
+
+        function handleDateFilter() {
+            currentDateFilter = dateFilter.value;
+            applyFilters();
+        }
+
+        function handleSort() {
+            currentSort = sortSelect.value;
+            applyFilters();
+        }
+
+        function clearAllFilters() {
+            currentSearch = '';
+            currentDateFilter = '';
+            currentSort = 'newest';
+            searchInput.value = '';
+            dateFilter.value = '';
+            sortSelect.value = 'newest';
+            applyFilters();
+        }
+
+        function applyFilters() {
+            let filtered = [...posts];
+
+            // Apply search filter
+            if (currentSearch) {
+                const searchTerm = currentSearch.toLowerCase();
+                filtered = filtered.filter(post => {
+                    return post.title.toLowerCase().includes(searchTerm) ||
+                           post.excerpt.toLowerCase().includes(searchTerm) ||
+                           post.content.toLowerCase().includes(searchTerm);
+                });
+            }
+
+            // Apply date filter
+            if (currentDateFilter) {
+                if (currentDateFilter.length === 4) {
+                    // Year filter
+                    filtered = filtered.filter(post => post.date.startsWith(currentDateFilter));
+                } else if (currentDateFilter.length === 7) {
+                    // Year-Month filter
+                    filtered = filtered.filter(post => post.date.startsWith(currentDateFilter));
+                } else {
+                    // Specific date
+                    filtered = filtered.filter(post => post.date === currentDateFilter);
+                }
+            }
+
+            // Apply sort
+            filtered.sort((a, b) => {
+                const dateA = new Date(a.date);
+                const dateB = new Date(b.date);
+                return currentSort === 'newest' ? dateB - dateA : dateA - dateB;
+            });
+
+            filteredPosts = filtered;
+            renderPosts(filteredPosts);
+            updateResultsInfo();
+        }
+
+        function updateResultsInfo() {
+            const totalPosts = posts.length;
+            const shownPosts = filteredPosts.length;
+
+            if (totalPosts === 0) {
+                resultsInfo.textContent = '';
+                return;
+            }
+
+            if (currentSearch || currentDateFilter || currentSort !== 'newest') {
+                let info = `showing ${shownPosts} of ${totalPosts} posts`;
+
+                if (currentSearch) {
+                    info += ` • search: "${currentSearch}"`;
+                }
+                if (currentDateFilter) {
+                    info += ` • date: ${currentDateFilter}`;
+                }
+                if (currentSort !== 'newest') {
+                    info += ` • ${currentSort} first`;
+                }
+
+                resultsInfo.textContent = info;
+            } else {
+                resultsInfo.textContent = `${totalPosts} posts`;
+            }
+        }
+
+        function populateDateFilter() {
+            const dates = new Set();
+            const years = new Set();
+            const months = new Set();
+
+            posts.forEach(post => {
+                const date = post.date;
+                const year = date.substring(0, 4);
+                const month = date.substring(0, 7);
+
+                dates.add(date);
+                years.add(year);
+                months.add(month);
+            });
+
+            // Clear existing options except "all dates"
+            dateFilter.innerHTML = '<option value="">all dates</option>';
+
+            // Add year options
+            Array.from(years).sort().reverse().forEach(year => {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year;
+                dateFilter.appendChild(option);
+            });
+
+            // Add month options
+            Array.from(months).sort().reverse().forEach(month => {
+                const [year, monthNum] = month.split('-');
+                const monthName = new Date(year, parseInt(monthNum) - 1).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long'
+                });
+                const option = document.createElement('option');
+                option.value = month;
+                option.textContent = monthName;
+                dateFilter.appendChild(option);
+            });
+        }
+
+        function highlightSearchTerm(text, searchTerm) {
+            if (!searchTerm) return escapeHtml(text);
+
+            const regex = new RegExp(`(${searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\        // Copy to clipboard
+        copyJsonBtn.addEventListener('click', async () => {
+            try {
+                await navigator.clipboard.writeText(jsonOutput.value);
+                const originalText = copyJsonBtn.textContent;
+                copyJsonBtn.textContent = 'copied!';
+                setTimeout(() => {
+                    copyJsonBtn.textContent = originalText;
+                }, 2000);
+            } catch (err) {
+                alert('failed to copy to clipboard');
+            }
+        });')})`, 'gi');
+            return escapeHtml(text).replace(regex, '<span class="highlight">$1</span>');
+        }
+
         // Blog posts functionality
         async function loadPosts() {
             try {
@@ -815,7 +1087,8 @@
                 }
 
                 posts = await response.json();
-                renderPosts(posts);
+                populateDateFilter();
+                applyFilters();
             } catch (error) {
                 console.error('Error loading posts:', error);
                 showError();
@@ -849,15 +1122,19 @@
                 day: 'numeric'
             });
 
+            // Highlight search terms in title and excerpt
+            const highlightedTitle = highlightSearchTerm(post.title, currentSearch);
+            const highlightedExcerpt = highlightSearchTerm(post.excerpt, currentSearch);
+
             return `
                 <article class="post-preview" data-id="${post.id}">
                     <div class="post-header">
-                        <h2 class="post-title">${escapeHtml(post.title)}</h2>
+                        <h2 class="post-title">${highlightedTitle}</h2>
                         <div class="post-date">${date}</div>
                         <span class="expand-indicator">+</span>
                     </div>
                     <div class="post-excerpt">
-                        ${escapeHtml(post.excerpt)}
+                        ${highlightedExcerpt}
                     </div>
                     <div class="post-content" id="content-${post.id}">
                         ${marked.parse(post.content)}
