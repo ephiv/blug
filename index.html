@@ -545,6 +545,23 @@
             opacity: 1;
         }
 
+        .post-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .post-controls input,
+        .post-controls select {
+            padding: 5px 10px;
+            border: 1px solid #445767;
+            background-color: #bdbccb;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+        }
+
+
 
         .loading {
             text-align: center;
@@ -642,6 +659,18 @@
         </div>
 
         <main id="blog-posts">
+            <div id="post-controls" class="post-controls">
+                <input type="text" id="search-input" placeholder="Search posts...">
+                <select id="filter-date">
+                    <option value="">All dates</option>
+                    <!-- We’ll populate months/years dynamically -->
+                </select>
+                <select id="sort-order">
+                    <option value="desc">Newest first</option>
+                    <option value="asc">Oldest first</option>
+                </select>
+            </div>
+
             <div class="loading">...</div>
         </main>
     </div>
@@ -837,12 +866,67 @@
                 }
 
                 posts = await response.json();
+                populateFilterOptions(posts);
+                applyFilters();
+
                 renderPosts(posts);
             } catch (error) {
                 console.error('Error loading posts:', error);
                 showError();
             }
         }
+
+        function applyFilters() {
+            const query = searchInput.value.toLowerCase();
+            const filterValue = filterDate.value; // "YYYY-MM" or full date
+            const order = sortOrder.value;
+
+            let filtered = posts.filter(post => {
+                const haystack = (post.title + ' ' + post.excerpt + ' ' + post.content).toLowerCase();
+                if (query && !haystack.includes(query)) return false;
+
+                if (filterValue) {
+                    const postMonth = post.date.slice(0,7); // "YYYY-MM"
+                    if (!postMonth.startsWith(filterValue)) return false;
+                }
+
+                return true;
+            });
+
+            filtered.sort((a, b) => {
+                if (order === 'asc') {
+                    return new Date(a.date) - new Date(b.date);
+                } else {
+                    return new Date(b.date) - new Date(a.date);
+                }
+            });
+
+            renderPosts(filtered);
+        }
+
+        function populateFilterOptions(posts) {
+            const months = new Set(posts.map(p => p.date.slice(0,7))); // "YYYY-MM"
+            const sortedMonths = Array.from(months).sort().reverse();
+
+            sortedMonths.forEach(month => {
+                const [year, m] = month.split('-');
+                const label = new Date(`${month}-01`).toLocaleDateString('en-US', { year:'numeric', month:'long' });
+                const opt = document.createElement('option');
+                opt.value = month;
+                opt.textContent = label;
+                filterDate.appendChild(opt);
+            });
+        }
+
+
+        const searchInput = document.getElementById('search-input');
+        const filterDate = document.getElementById('filter-date');
+        const sortOrder = document.getElementById('sort-order');
+
+        searchInput.addEventListener('input', applyFilters);
+        filterDate.addEventListener('change', applyFilters);
+        sortOrder.addEventListener('change', applyFilters);
+
 
         function renderPosts(posts) {
             if (!posts || posts.length === 0) {
