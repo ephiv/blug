@@ -7,17 +7,64 @@
     <!-- Prism.js CSS for syntax highlighting -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
     <style>
+        :root {
+            /* Light theme (default) */
+            --bg-primary: #d7d7de;
+            --bg-secondary: #bdbccb;
+            --bg-tertiary: #f3e4d7;
+            --text-primary: #1a1a1a;
+            --text-secondary: #111111;
+            --text-muted: #8d937f;
+            --border-color: #445767;
+            --border-muted: #aaa39e;
+            --accent-color: #eeddff;
+            --code-bg: #bdbccb;
+            --code-border: #8d937f;
+            --code-inline-bg: #f3e4d7;
+            --syntax-bg: #f8f4f0;
+            --syntax-comment: #aaa39e;
+            --syntax-punctuation: #5c524c;
+            --syntax-keyword: #551723;
+            --syntax-string: #7a3840;
+            --syntax-number: #981d34;
+            --syntax-function: #7a3840;
+        }
+
+        [data-theme="dark"] {
+            /* Dark theme */
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2d2d2d;
+            --bg-tertiary: #3a3a3a;
+            --text-primary: #e0e0e0;
+            --text-secondary: #cccccc;
+            --text-muted: #888888;
+            --border-color: #4a5568;
+            --border-muted: #555555;
+            --accent-color: #4a5568;
+            --code-bg: #2d2d2d;
+            --code-border: #4a5568;
+            --code-inline-bg: #3a3a3a;
+            --syntax-bg: #252525;
+            --syntax-comment: #888888;
+            --syntax-punctuation: #cccccc;
+            --syntax-keyword: #ff6b6b;
+            --syntax-string: #4ecdc4;
+            --syntax-number: #feca57;
+            --syntax-function: #48cae4;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
         }
 
         body {
             font-family: 'Courier New', monospace;
             line-height: 1.6;
-            color: #1a1a1a;
-            background-color: #d7d7de;
+            color: var(--text-primary);
+            background-color: var(--bg-primary);
         }
 
         .container {
@@ -27,7 +74,7 @@
         }
 
         header {
-            border-bottom: 2px solid #445767;
+            border-bottom: 2px solid var(--border-color);
             padding-bottom: 20px;
             margin-bottom: 40px;
             position: relative;
@@ -43,13 +90,55 @@
         .subtitle {
             font-size: 0.9rem;
             margin-top: 10px;
-            color: #111111;
+            color: var(--text-secondary);
         }
 
-        .auth-section {
+        .header-controls {
             position: absolute;
             top: 0;
             right: 0;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .theme-controls {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+            margin-right: 15px;
+        }
+
+        .theme-toggle {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            padding: 5px 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            cursor: pointer;
+            color: var(--text-primary);
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--accent-color);
+        }
+
+        .customize-btn {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            padding: 5px 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            cursor: pointer;
+            color: var(--text-primary);
+        }
+
+        .customize-btn:hover {
+            background-color: var(--accent-color);
+        }
+
+        .auth-section {
             display: flex;
             gap: 10px;
             align-items: center;
@@ -57,37 +146,38 @@
 
         .auth-input {
             padding: 5px 10px;
-            border: 1px solid #445767;
-            background-color: #bdbccb;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-secondary);
             font-family: 'Courier New', monospace;
             font-size: 0.8rem;
+            color: var(--text-primary);
         }
 
         .auth-button, .create-button, .editor-button {
             padding: 5px 15px;
-            border: 1px solid #445767;
-            background-color: #bdbccb;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-secondary);
             font-family: 'Courier New', monospace;
             font-size: 0.8rem;
             cursor: pointer;
-            transition: background-color 0.2s;
+            color: var(--text-primary);
         }
 
         .auth-button:hover, .create-button:hover, .editor-button:hover {
-            background-color: #eeddff;
+            background-color: var(--accent-color);
         }
 
         .auth-status {
             font-size: 0.8rem;
-            color: #8d937f;
+            color: var(--text-muted);
         }
 
         .create-section {
             display: none;
             margin-bottom: 30px;
             padding: 20px;
-            border: 1px solid #445767;
-            background-color: #bdbccb;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-secondary);
         }
 
         .create-section.visible {
@@ -116,21 +206,23 @@
         .form-input {
             width: 100%;
             padding: 10px;
-            border: 1px solid #445767;
-            background-color: #d7d7de;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-primary);
             font-family: 'Courier New', monospace;
             font-size: 0.9rem;
+            color: var(--text-primary);
         }
 
         .form-textarea {
             width: 100%;
             min-height: 100px;
             padding: 10px;
-            border: 1px solid #445767;
-            background-color: #d7d7de;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-primary);
             font-family: 'Courier New', monospace;
             font-size: 0.9rem;
             resize: vertical;
+            color: var(--text-primary);
         }
 
         .editor-toolbar {
@@ -138,23 +230,23 @@
             gap: 5px;
             margin-bottom: 10px;
             padding: 10px;
-            border: 1px solid #445767;
-            background-color: #bdbccb;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-secondary);
             flex-wrap: wrap;
         }
 
         .toolbar-button {
             padding: 5px 10px;
-            border: 1px solid #445767;
-            background-color: #d7d7de;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-primary);
             font-family: 'Courier New', monospace;
             font-size: 0.8rem;
             cursor: pointer;
-            transition: background-color 0.2s;
+            color: var(--text-primary);
         }
 
         .toolbar-button:hover {
-            background-color: #eeddff;
+            background-color: var(--accent-color);
         }
 
         .editor-area {
@@ -170,17 +262,18 @@
             width: 100%;
             min-height: 300px;
             padding: 15px;
-            border: 1px solid #445767;
-            background-color: #d7d7de;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-primary);
             font-family: 'Courier New', monospace;
             font-size: 0.9rem;
             resize: vertical;
             white-space: pre-wrap;
+            color: var(--text-primary);
         }
 
         .preview-pane {
-            border: 1px solid #445767;
-            background-color: #d7d7de;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-primary);
             padding: 15px;
             height: 300px;
             overflow-y: auto;
@@ -196,51 +289,51 @@
         .json-output {
             margin-top: 20px;
             padding: 15px;
-            border: 1px solid #445767;
-            background-color: #bdbccb;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-secondary);
         }
 
         .json-textarea {
             width: 100%;
             min-height: 150px;
             padding: 10px;
-            border: 1px solid #445767;
-            background-color: #d7d7de;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-primary);
             font-family: 'Courier New', monospace;
             font-size: 0.8rem;
             resize: vertical;
+            color: var(--text-primary);
         }
 
         .copy-button {
             margin-top: 10px;
             padding: 8px 15px;
-            border: 1px solid #445767;
-            background-color: #d7d7de;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-primary);
             font-family: 'Courier New', monospace;
             font-size: 0.9rem;
             cursor: pointer;
-            transition: background-color 0.2s;
+            color: var(--text-primary);
         }
 
         .copy-button:hover {
-            background-color: #eeddff;
+            background-color: var(--accent-color);
         }
 
         .post-preview {
-            border: 1px solid #445767;
+            border: 1px solid var(--border-color);
             margin-bottom: 20px;
             cursor: pointer;
-            transition: background-color 0.2s;
-            background-color: #bdbccb;
+            background-color: var(--bg-secondary);
         }
 
         .post-preview:hover {
-            background-color: #eeddff;
+            background-color: var(--accent-color);
         }
 
         .post-header {
             padding: 20px;
-            border-bottom: 1px solid #445767;
+            border-bottom: 1px solid var(--border-color);
         }
 
         .post-title {
@@ -251,19 +344,19 @@
 
         .post-date {
             font-size: 0.8rem;
-            color: #111111;
+            color: var(--text-secondary);
         }
 
         .post-excerpt {
             padding: 20px 20px 20px;
-            color: #111111;
+            color: var(--text-secondary);
         }
 
         .post-content {
             display: none;
             padding: 20px;
-            border-top: 1px solid #445767;
-            background-color: #d7d7de;
+            border-top: 1px solid var(--border-color);
+            background-color: var(--bg-primary);
         }
 
         .post-content.expanded {
@@ -278,11 +371,11 @@
 
         .no-posts {
             text-align: center;
-            color: #8d937f;
+            color: var(--text-muted);
             font-style: italic;
             padding: 40px;
-            border: 1px solid #445767;
-            background-color: #bdbccb;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-secondary);
         }
 
         /* Markdown content styling */
@@ -298,13 +391,13 @@
 
         .post-content h1, .preview-pane h1 {
             font-size: 1.5rem;
-            border-bottom: 2px solid #445767;
+            border-bottom: 2px solid var(--border-color);
             padding-bottom: 5px;
         }
 
         .post-content h2, .preview-pane h2 {
             font-size: 1.3rem;
-            border-bottom: 1px solid #445767;
+            border-bottom: 1px solid var(--border-color);
             padding-bottom: 3px;
         }
 
@@ -322,24 +415,24 @@
         }
 
         .post-content blockquote, .preview-pane blockquote {
-            border-left: 3px solid #445767;
+            border-left: 3px solid var(--border-color);
             padding-left: 15px;
             margin: 15px 0;
-            color: #8d937f;
+            color: var(--text-muted);
             font-style: italic;
         }
 
         .post-content code, .preview-pane code {
-            background-color: #bdbccb;
+            background-color: var(--bg-secondary);
             padding: 2px 4px;
             font-family: 'Courier New', monospace;
-            border: 1px solid #8d937f;
+            border: 1px solid var(--text-muted);
         }
 
         .post-content pre, .preview-pane pre {
-            background-color: #bdbccb;
+            background-color: var(--bg-secondary);
             padding: 15px;
-            border: 1px solid #8d937f;
+            border: 1px solid var(--text-muted);
             overflow-x: auto;
             margin: 15px 0;
         }
@@ -351,13 +444,13 @@
         }
 
         .post-content a, .preview-pane a {
-            color: #445767;
+            color: var(--border-color);
             text-decoration: underline;
         }
 
         .post-content a:hover, .preview-pane a:hover {
-            background-color: #1a1a1a;
-            color: #d7d7de;
+            background-color: var(--text-primary);
+            color: var(--bg-primary);
         }
 
         .post-content strong, .preview-pane strong {
@@ -370,14 +463,14 @@
 
         .post-content hr, .preview-pane hr {
             border: none;
-            border-top: 1px solid #445767;
+            border-top: 1px solid var(--border-color);
             margin: 20px 0;
         }
 
-        /* Override Prism.js styles to match your actual color scheme */
+        /* Override Prism.js styles */
         code[class*="language-"],
         pre[class*="language-"] {
-            color: #111111 !important;
+            color: var(--text-primary) !important;
             background: none !important;
             text-shadow: none !important;
             font-family: 'Courier New', monospace !important;
@@ -389,22 +482,21 @@
             padding: 15px !important;
             margin: 15px 0 !important;
             overflow: auto !important;
-            background-color: #f8f4f0 !important;
-            border: 1px solid #aaa39e !important;
+            background-color: var(--syntax-bg) !important;
+            border: 1px solid var(--border-muted) !important;
         }
 
-        /* Token colors using your palette + interpolated colors */
         .token.comment,
         .token.prolog,
         .token.doctype,
         .token.cdata {
-            color: #aaa39e !important;
+            color: var(--syntax-comment) !important;
             background: none !important;
             font-style: italic !important;
         }
 
         .token.punctuation {
-            color: #5c524c !important;
+            color: var(--syntax-punctuation) !important;
             background: none !important;
         }
 
@@ -415,7 +507,7 @@
         .token.constant,
         .token.symbol,
         .token.deleted {
-            color: #981d34 !important;
+            color: var(--syntax-number) !important;
             background: none !important;
         }
 
@@ -425,7 +517,7 @@
         .token.char,
         .token.builtin,
         .token.inserted {
-            color: #7a3840 !important;
+            color: var(--syntax-string) !important;
             background: none !important;
         }
 
@@ -434,21 +526,21 @@
         .token.url,
         .language-css .token.string,
         .style .token.string {
-            color: #5c524c !important;
+            color: var(--syntax-punctuation) !important;
             background: none !important;
         }
 
         .token.atrule,
         .token.attr-value,
         .token.keyword {
-            color: #551723 !important;
+            color: var(--syntax-keyword) !important;
             background: none !important;
             font-weight: bold !important;
         }
 
         .token.function,
         .token.class-name {
-            color: #7a3840 !important;
+            color: var(--syntax-function) !important;
             background: none !important;
             font-weight: bold !important;
         }
@@ -456,61 +548,23 @@
         .token.regex,
         .token.important,
         .token.variable {
-            color: #981d34 !important;
+            color: var(--syntax-number) !important;
             background: none !important;
         }
 
-        /* Python-specific tokens */
-        .language-python .token.keyword {
-            color: #551723 !important;
-        }
-
-        .language-python .token.function {
-            color: #7a3840 !important;
-        }
-
-        .language-python .token.builtin {
-            color: #981d34 !important;
-        }
-
-        /* C/C++ specific tokens */
-        .language-c .token.keyword,
-        .language-cpp .token.keyword {
-            color: #551723 !important;
-        }
-
-        .language-c .token.function,
-        .language-cpp .token.function {
-            color: #7a3840 !important;
-        }
-
-        .language-c .token.directive,
-        .language-cpp .token.directive {
-            color: #981d34 !important;
-        }
-
-        /* Remove any highlighting backgrounds */
-        .token.operator,
-        .token.punctuation,
-        .token.important {
-            background: none !important;
-        }
-
-        /* Inline code styling - keep the bright yellowish highlight */
         .post-content code:not([class*="language-"]),
         .preview-pane code:not([class*="language-"]) {
-            background-color: #f3e4d7 !important;
-            color: #111111 !important;
+            background-color: var(--code-inline-bg) !important;
+            color: var(--text-primary) !important;
             padding: 2px 4px !important;
             font-family: 'Courier New', monospace !important;
-            border: 1px solid #aaa39e !important;
+            border: 1px solid var(--border-muted) !important;
         }
 
-        /* Plain code blocks (no language specified) - no background modifications */
         .post-content pre:not([class*="language-"]),
         .preview-pane pre:not([class*="language-"]) {
-            background-color: #bdbccb !important; /* Use your original code block color */
-            border: 1px solid #8d937f !important; /* Use your original border color */
+            background-color: var(--code-bg) !important;
+            border: 1px solid var(--code-border) !important;
             padding: 15px !important;
             margin: 15px 0 !important;
             overflow-x: auto !important;
@@ -521,7 +575,7 @@
             background: none !important;
             border: none !important;
             padding: 0 !important;
-            color: #1a1a1a !important; /* Use your original text color */
+            color: var(--text-primary) !important;
         }
 
         .code-block {
@@ -532,13 +586,13 @@
             position: absolute;
             top: 8px;
             right: 8px;
-            background: #d7d7de;
-            border: 1px solid #445767;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
             padding: 4px 8px;
             font-size: 0.8rem;
             cursor: pointer;
             opacity: 0;
-            transition: opacity 0.3s;
+            color: var(--text-primary);
         }
 
         .code-block:hover .copy-code-btn {
@@ -555,30 +609,187 @@
         .post-controls input,
         .post-controls select {
             padding: 5px 10px;
-            border: 1px solid #445767;
-            background-color: #bdbccb;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-secondary);
             font-family: 'Courier New', monospace;
             font-size: 0.8rem;
+            color: var(--text-primary);
         }
-
-
 
         .loading {
             text-align: center;
-            color: #8d937f;
+            color: var(--text-muted);
             padding: 40px;
         }
 
         .error {
             text-align: center;
-            color: #8d937f;
+            color: var(--text-muted);
             padding: 40px;
-            border: 1px solid #445767;
-            background-color: #bdbccb;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-secondary);
+        }
+
+        /* Theme Customizer Modal */
+        .theme-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+        }
+
+        .theme-modal.visible {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-modal-content {
+            background: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            padding: 30px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .theme-modal h2 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .theme-tabs {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .theme-tab {
+            padding: 10px 20px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-bottom: none;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            color: var(--text-primary);
+        }
+
+        .theme-tab.active {
+            background: var(--accent-color);
+        }
+
+        .theme-section {
+            display: none;
+        }
+
+        .theme-section.active {
+            display: block;
+        }
+
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .color-field {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .color-field label {
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .color-input-group {
+            display: flex;
+            gap: 5px;
+        }
+
+        .color-input-group input[type="color"] {
+            width: 40px;
+            height: 30px;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+        }
+
+        .color-input-group input[type="text"] {
+            flex: 1;
+            padding: 5px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+        }
+
+        .theme-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .theme-btn {
+            padding: 8px 15px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .theme-btn:hover {
+            background: var(--accent-color);
+        }
+
+        .theme-preview {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+        }
+
+        .preview-sample {
+            margin-bottom: 15px;
+        }
+
+        .preview-sample h3 {
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+
+        .preview-sample p {
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+        }
+
+        .preview-sample code {
+            background: var(--code-inline-bg);
+            padding: 2px 4px;
+            color: var(--text-primary);
+        }
+
+        .preview-sample pre {
+            background: var(--syntax-bg);
+            padding: 10px;
+            border: 1px solid var(--border-muted);
+            overflow-x: auto;
         }
 
         @media (max-width: 768px) {
-            .auth-section {
+            .header-controls {
                 position: static;
                 margin-top: 20px;
                 justify-content: flex-start;
@@ -587,6 +798,15 @@
 
             .editor-area {
                 flex-direction: column;
+            }
+
+            .theme-modal-content {
+                margin: 20px;
+                padding: 20px;
+            }
+
+            .color-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -597,12 +817,19 @@
             <h1>blug</h1>
             <p class="subtitle">a minimal blog (im too lazy to make a real one)</p>
 
-            <div class="auth-section">
-                <div id="auth-form">
-                    <input type="password" id="password-input" class="auth-input" placeholder="enter password">
-                    <button id="auth-button" class="auth-button">login</button>
+            <div class="header-controls">
+                <div class="theme-controls">
+                    <button id="theme-toggle" class="theme-toggle">🌙</button>
+                    <button id="customize-theme" class="customize-btn">🎨</button>
                 </div>
-                <div id="auth-status" class="auth-status" style="display: none;"></div>
+
+                <div class="auth-section">
+                    <div id="auth-form">
+                        <input type="password" id="password-input" class="auth-input" placeholder="enter password">
+                        <button id="auth-button" class="auth-button">login</button>
+                    </div>
+                    <div id="auth-status" class="auth-status" style="display: none;"></div>
+                </div>
             </div>
         </header>
 
@@ -662,7 +889,6 @@
             <input type="text" id="search-input" placeholder="Search posts...">
             <select id="filter-date">
                 <option value="">All dates</option>
-                <!-- We’ll populate months/years dynamically -->
             </select>
             <select id="sort-order">
                 <option value="asc">Oldest first</option>
@@ -673,6 +899,52 @@
         <main id="blog-posts">
             <div class="loading">...</div>
         </main>
+    </div>
+
+    <!-- Theme Customizer Modal -->
+    <div id="theme-modal" class="theme-modal">
+        <div class="theme-modal-content">
+            <h2>Customize Themes</h2>
+
+            <div class="theme-tabs">
+                <button class="theme-tab active" data-theme="light">Light Theme</button>
+                <button class="theme-tab" data-theme="dark">Dark Theme</button>
+            </div>
+
+            <div id="light-theme-section" class="theme-section active">
+                <h3>Light Theme Colors</h3>
+                <div class="color-grid" id="light-color-grid">
+                    <!-- Color inputs will be generated here -->
+                </div>
+            </div>
+
+            <div id="dark-theme-section" class="theme-section">
+                <h3>Dark Theme Colors</h3>
+                <div class="color-grid" id="dark-color-grid">
+                    <!-- Color inputs will be generated here -->
+                </div>
+            </div>
+
+            <div class="theme-preview">
+                <h3>Preview</h3>
+                <div class="preview-sample">
+                    <h3>Sample Heading</h3>
+                    <p>This is some sample text to preview your theme. <code>inline code</code></p>
+                    <pre><code class="language-python">
+                    def hello_world():
+                        print("Hello, World!")
+
+                    hello_world()
+                    </code></pre>
+                </div>
+            </div>
+
+            <div class="theme-actions">
+                <button class="theme-btn" id="reset-theme">Reset to Default</button>
+                <button class="theme-btn" id="apply-theme">Apply & Save</button>
+                <button class="theme-btn" id="close-modal">Close</button>
+            </div>
+        </div>
     </div>
 
     <!-- Prism.js script for syntax highlighting -->
@@ -687,6 +959,76 @@
 
         let isAuthenticated = false;
         let posts = [];
+        let currentTheme = 'light';
+
+        // Default theme palettes
+        const defaultThemes = {
+            light: {
+                'bg-primary': '#d7d7de',
+                'bg-secondary': '#bdbccb',
+                'bg-tertiary': '#f3e4d7',
+                'text-primary': '#1a1a1a',
+                'text-secondary': '#111111',
+                'text-muted': '#8d937f',
+                'border-color': '#445767',
+                'border-muted': '#aaa39e',
+                'accent-color': '#eeddff',
+                'code-bg': '#bdbccb',
+                'code-border': '#8d937f',
+                'code-inline-bg': '#f3e4d7',
+                'syntax-bg': '#f8f4f0',
+                'syntax-comment': '#aaa39e',
+                'syntax-punctuation': '#5c524c',
+                'syntax-keyword': '#551723',
+                'syntax-string': '#7a3840',
+                'syntax-number': '#981d34',
+                'syntax-function': '#7a3840'
+            },
+            dark: {
+                'bg-primary': '#1a1a1a',
+                'bg-secondary': '#2d2d2d',
+                'bg-tertiary': '#3a3a3a',
+                'text-primary': '#e0e0e0',
+                'text-secondary': '#cccccc',
+                'text-muted': '#888888',
+                'border-color': '#4a5568',
+                'border-muted': '#555555',
+                'accent-color': '#4a5568',
+                'code-bg': '#2d2d2d',
+                'code-border': '#4a5568',
+                'code-inline-bg': '#3a3a3a',
+                'syntax-bg': '#252525',
+                'syntax-comment': '#888888',
+                'syntax-punctuation': '#cccccc',
+                'syntax-keyword': '#ff6b6b',
+                'syntax-string': '#4ecdc4',
+                'syntax-number': '#feca57',
+                'syntax-function': '#48cae4'
+            }
+        };
+
+        // Color field configurations
+        const colorFields = [
+            { key: 'bg-primary', label: 'Primary Background', category: 'backgrounds' },
+            { key: 'bg-secondary', label: 'Secondary Background', category: 'backgrounds' },
+            { key: 'bg-tertiary', label: 'Tertiary Background', category: 'backgrounds' },
+            { key: 'text-primary', label: 'Primary Text', category: 'text' },
+            { key: 'text-secondary', label: 'Secondary Text', category: 'text' },
+            { key: 'text-muted', label: 'Muted Text', category: 'text' },
+            { key: 'border-color', label: 'Primary Border', category: 'borders' },
+            { key: 'border-muted', label: 'Muted Border', category: 'borders' },
+            { key: 'accent-color', label: 'Accent/Hover', category: 'accents' },
+            { key: 'code-bg', label: 'Code Background', category: 'code' },
+            { key: 'code-border', label: 'Code Border', category: 'code' },
+            { key: 'code-inline-bg', label: 'Inline Code Background', category: 'code' },
+            { key: 'syntax-bg', label: 'Syntax Highlight Background', category: 'syntax' },
+            { key: 'syntax-comment', label: 'Comments', category: 'syntax' },
+            { key: 'syntax-punctuation', label: 'Punctuation', category: 'syntax' },
+            { key: 'syntax-keyword', label: 'Keywords', category: 'syntax' },
+            { key: 'syntax-string', label: 'Strings', category: 'syntax' },
+            { key: 'syntax-number', label: 'Numbers', category: 'syntax' },
+            { key: 'syntax-function', label: 'Functions', category: 'syntax' }
+        ];
 
         // DOM elements
         const passwordInput = document.getElementById('password-input');
@@ -697,6 +1039,9 @@
         const toggleEditorBtn = document.getElementById('toggle-editor');
         const editorContainer = document.getElementById('editor-container');
         const postsContainer = document.getElementById('blog-posts');
+        const themeToggle = document.getElementById('theme-toggle');
+        const customizeTheme = document.getElementById('customize-theme');
+        const themeModal = document.getElementById('theme-modal');
 
         // Editor elements
         const postIdInput = document.getElementById('post-id');
@@ -706,6 +1051,254 @@
         const markdownPreview = document.getElementById('markdown-preview');
         const jsonOutput = document.getElementById('json-output');
         const copyJsonBtn = document.getElementById('copy-json');
+
+        // Theme initialization
+        function initializeThemes() {
+            // Load saved theme and customizations
+            const savedTheme = localStorage.getItem('blug-theme') || 'light';
+            const savedCustomizations = JSON.parse(localStorage.getItem('blug-custom-themes')) || {};
+
+            // Merge saved customizations with defaults
+            Object.keys(defaultThemes).forEach(themeKey => {
+                if (savedCustomizations[themeKey]) {
+                    Object.assign(defaultThemes[themeKey], savedCustomizations[themeKey]);
+                }
+            });
+
+            currentTheme = savedTheme;
+            applyTheme(currentTheme);
+            updateThemeToggleIcon();
+        }
+
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            const colors = defaultThemes[theme];
+
+            Object.entries(colors).forEach(([key, value]) => {
+                document.documentElement.style.setProperty(`--${key}`, value);
+            });
+
+            currentTheme = theme;
+            localStorage.setItem('blug-theme', theme);
+        }
+
+        function updateThemeToggleIcon() {
+            themeToggle.textContent = currentTheme === 'light' ? '🌙' : '☀️';
+        }
+
+        // Theme toggle functionality
+        themeToggle.addEventListener('click', () => {
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            applyTheme(newTheme);
+            updateThemeToggleIcon();
+        });
+
+        // Theme customizer modal
+        customizeTheme.addEventListener('click', () => {
+            openThemeCustomizer();
+        });
+
+        function openThemeCustomizer() {
+            themeModal.classList.add('visible');
+            generateColorFields();
+            populateCurrentValues();
+        }
+
+        function generateColorFields() {
+            const lightGrid = document.getElementById('light-color-grid');
+            const darkGrid = document.getElementById('dark-color-grid');
+
+            lightGrid.innerHTML = '';
+            darkGrid.innerHTML = '';
+
+            colorFields.forEach(field => {
+                const lightField = createColorField(field, 'light');
+                const darkField = createColorField(field, 'dark');
+                lightGrid.appendChild(lightField);
+                darkGrid.appendChild(darkField);
+            });
+        }
+
+        function createColorField(field, theme) {
+            const div = document.createElement('div');
+            div.className = 'color-field';
+
+            const currentColor = defaultThemes[theme][field.key];
+
+            div.innerHTML = `
+                <label>${field.label}</label>
+                <div class="color-input-group">
+                    <input type="color" value="${currentColor}" data-theme="${theme}" data-key="${field.key}">
+                    <input type="text" value="${currentColor}" data-theme="${theme}" data-key="${field.key}">
+                </div>
+            `;
+
+            // Add event listeners
+            const colorInput = div.querySelector('input[type="color"]');
+            const textInput = div.querySelector('input[type="text"]');
+
+            colorInput.addEventListener('input', (e) => {
+                textInput.value = e.target.value;
+                updateThemePreview();
+            });
+
+            textInput.addEventListener('input', (e) => {
+                if (isValidColor(e.target.value)) {
+                    colorInput.value = e.target.value;
+                    updateThemePreview();
+                }
+            });
+
+            return div;
+        }
+
+        function populateCurrentValues() {
+            ['light', 'dark'].forEach(theme => {
+                colorFields.forEach(field => {
+                    const colorInput = document.querySelector(`input[type="color"][data-theme="${theme}"][data-key="${field.key}"]`);
+                    const textInput = document.querySelector(`input[type="text"][data-theme="${theme}"][data-key="${field.key}"]`);
+
+                    if (colorInput && textInput) {
+                        const currentValue = defaultThemes[theme][field.key];
+                        colorInput.value = currentValue;
+                        textInput.value = currentValue;
+                    }
+                });
+            });
+        }
+
+        function updateThemePreview() {
+            // Get current values from the active tab
+            const activeTab = document.querySelector('.theme-tab.active').dataset.theme;
+            const tempTheme = {};
+
+            colorFields.forEach(field => {
+                const textInput = document.querySelector(`input[type="text"][data-theme="${activeTab}"][data-key="${field.key}"]`);
+                if (textInput && isValidColor(textInput.value)) {
+                    tempTheme[field.key] = textInput.value;
+                }
+            });
+
+            // Apply preview (only if viewing the current active theme)
+            if (activeTab === currentTheme) {
+                Object.entries(tempTheme).forEach(([key, value]) => {
+                    document.documentElement.style.setProperty(`--${key}`, value);
+                });
+            }
+        }
+
+        function isValidColor(color) {
+            const s = new Option().style;
+            s.color = color;
+            return s.color !== '';
+        }
+
+        // Theme tab switching
+        document.addEventListener('click', (e) => {
+            if (e.target.matches('.theme-tab')) {
+                document.querySelectorAll('.theme-tab').forEach(tab => tab.classList.remove('active'));
+                document.querySelectorAll('.theme-section').forEach(section => section.classList.remove('active'));
+
+                e.target.classList.add('active');
+                const themeType = e.target.dataset.theme;
+                document.getElementById(`${themeType}-theme-section`).classList.add('active');
+
+                updateThemePreview();
+            }
+        });
+
+        // Theme customizer actions
+        document.getElementById('apply-theme').addEventListener('click', () => {
+            saveCurrentCustomizations();
+            themeModal.classList.remove('visible');
+        });
+
+        document.getElementById('reset-theme').addEventListener('click', () => {
+            if (confirm('Reset current theme to default? This will lose your customizations.')) {
+                const activeTab = document.querySelector('.theme-tab.active').dataset.theme;
+
+                // Reset to original default
+                const originalDefaults = {
+                    light: {
+                        'bg-primary': '#d7d7de',
+                        'bg-secondary': '#bdbccb',
+                        'bg-tertiary': '#f3e4d7',
+                        'text-primary': '#1a1a1a',
+                        'text-secondary': '#111111',
+                        'text-muted': '#8d937f',
+                        'border-color': '#445767',
+                        'border-muted': '#aaa39e',
+                        'accent-color': '#eeddff',
+                        'code-bg': '#bdbccb',
+                        'code-border': '#8d937f',
+                        'code-inline-bg': '#f3e4d7',
+                        'syntax-bg': '#f8f4f0',
+                        'syntax-comment': '#aaa39e',
+                        'syntax-punctuation': '#5c524c',
+                        'syntax-keyword': '#551723',
+                        'syntax-string': '#7a3840',
+                        'syntax-number': '#981d34',
+                        'syntax-function': '#7a3840'
+                    },
+                    dark: {
+                        'bg-primary': '#1a1a1a',
+                        'bg-secondary': '#2d2d2d',
+                        'bg-tertiary': '#3a3a3a',
+                        'text-primary': '#e0e0e0',
+                        'text-secondary': '#cccccc',
+                        'text-muted': '#888888',
+                        'border-color': '#4a5568',
+                        'border-muted': '#555555',
+                        'accent-color': '#4a5568',
+                        'code-bg': '#2d2d2d',
+                        'code-border': '#4a5568',
+                        'code-inline-bg': '#3a3a3a',
+                        'syntax-bg': '#252525',
+                        'syntax-comment': '#888888',
+                        'syntax-punctuation': '#cccccc',
+                        'syntax-keyword': '#ff6b6b',
+                        'syntax-string': '#4ecdc4',
+                        'syntax-number': '#feca57',
+                        'syntax-function': '#48cae4'
+                    }
+                };
+
+                defaultThemes[activeTab] = { ...originalDefaults[activeTab] };
+                populateCurrentValues();
+                updateThemePreview();
+            }
+        });
+
+        document.getElementById('close-modal').addEventListener('click', () => {
+            themeModal.classList.remove('visible');
+            // Revert to saved theme
+            applyTheme(currentTheme);
+        });
+
+        // Close modal when clicking outside
+        themeModal.addEventListener('click', (e) => {
+            if (e.target === themeModal) {
+                document.getElementById('close-modal').click();
+            }
+        });
+
+        function saveCurrentCustomizations() {
+            const customizations = {};
+
+            ['light', 'dark'].forEach(theme => {
+                customizations[theme] = {};
+                colorFields.forEach(field => {
+                    const textInput = document.querySelector(`input[type="text"][data-theme="${theme}"][data-key="${field.key}"]`);
+                    if (textInput && isValidColor(textInput.value)) {
+                        customizations[theme][field.key] = textInput.value;
+                        defaultThemes[theme][field.key] = textInput.value;
+                    }
+                });
+            });
+
+            localStorage.setItem('blug-custom-themes', JSON.stringify(customizations));
+            applyTheme(currentTheme);
+        }
 
         // Configure marked
         marked.setOptions({
@@ -878,11 +1471,10 @@
 
         function applyFilters() {
             let query = searchInput.value.trim().toLowerCase();
-            const filterValue = filterDate.value; // "YYYY-MM"
+            const filterValue = filterDate.value;
             const order = sortOrder.value;
 
             let filtered = posts.filter(post => {
-                // Special case: search for id
                 if (query.startsWith('id=')) {
                     const targetId = query.replace(/^id=#?/, '').trim();
                     if (post.id.toLowerCase() !== targetId) return false;
@@ -891,16 +1483,14 @@
                     if (!haystack.includes(query)) return false;
                 }
 
-                // Date filter
                 if (filterValue) {
-                    const postMonth = post.date.slice(0,7); // "YYYY-MM"
+                    const postMonth = post.date.slice(0,7);
                     if (!postMonth.startsWith(filterValue)) return false;
                 }
 
                 return true;
             });
 
-            // Sort
             filtered.sort((a, b) => {
                 if (order === 'asc') {
                     return new Date(a.date) - new Date(b.date);
@@ -912,9 +1502,8 @@
             renderPosts(filtered);
         }
 
-
         function populateFilterOptions(posts) {
-            const months = new Set(posts.map(p => p.date.slice(0,7))); // "YYYY-MM"
+            const months = new Set(posts.map(p => p.date.slice(0,7)));
             const sortedMonths = Array.from(months).sort().reverse();
 
             sortedMonths.forEach(month => {
@@ -927,7 +1516,6 @@
             });
         }
 
-
         const searchInput = document.getElementById('search-input');
         const filterDate = document.getElementById('filter-date');
         const sortOrder = document.getElementById('sort-order');
@@ -935,7 +1523,6 @@
         searchInput.addEventListener('input', applyFilters);
         filterDate.addEventListener('change', applyFilters);
         sortOrder.addEventListener('change', applyFilters);
-
 
         function renderPosts(posts) {
             if (!posts || posts.length === 0) {
@@ -957,13 +1544,13 @@
 
                     const button = document.createElement('button');
                     button.className = 'copy-code-btn';
-                    button.innerHTML = '📋'; // clipboard icon
+                    button.innerHTML = '📋';
                     wrapper.appendChild(button);
 
                     button.addEventListener('click', async () => {
                         try {
                             await navigator.clipboard.writeText(codeEl.textContent);
-                            button.innerHTML = '✔️'; // checkmark
+                            button.innerHTML = '✅';
                             setTimeout(() => button.innerHTML = '📋', 2000);
                         } catch {
                             button.innerHTML = '❌';
@@ -975,14 +1562,10 @@
                 }
             });
 
-            // Apply syntax highlighting to all code blocks after rendering
             setTimeout(() => {
                 Prism.highlightAllUnder(postsContainer);
-                addCopyButtons();
             }, 100);
 
-
-            // Add click handlers for post expansion
             document.querySelectorAll('.post-preview .post-header, .post-preview .post-excerpt')
                 .forEach(el => {
                     el.addEventListener('click', (e) => {
@@ -1030,7 +1613,6 @@
             }
         }
 
-
         function showNoPosts() {
             postsContainer.innerHTML = `
                 <div class="no-posts">
@@ -1064,7 +1646,8 @@
             return div.innerHTML;
         }
 
-        // Load posts when page loads
+        // Initialize themes and load posts
+        initializeThemes();
         loadPosts();
     </script>
 </body>
