@@ -953,12 +953,16 @@
 
     <!-- MathJax for LaTeX rendering -->
     <script>
-    window.MathJax = {
-    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
-    svg: { fontCache: 'global' }
-    };
+        window.MathJax = {
+        tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['$$','$$'], ['\\[','\\]']]
+        },
+        svg: { fontCache: 'global' }
+        };
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.min.js" async></script>
+
 
 
     <script type="module">
@@ -1408,14 +1412,14 @@
         function updatePreview() {
             const markdown = markdownEditor.value;
 
-            if (window.MathJax) {
-                MathJax.typesetPromise([markdownPreview]);
-            }
-
             markdownPreview.innerHTML = marked.parse(markdown);
             // Apply syntax highlighting to preview with a small delay
             setTimeout(() => {
                 Prism.highlightAllUnder(markdownPreview);
+                if (window.MathJax && window.MathJax.typesetPromise) {
+                    MathJax.typesetPromise([markdownPreview]).catch((err) => console.error('MathJax preview error:', err));
+                }
+
             }, 50);
             updateJsonOutput();
         }
@@ -1548,10 +1552,6 @@
             const postsHtml = posts.map(post => createPostHTML(post)).join('');
             postsContainer.innerHTML = postsHtml;
 
-            if (window.MathJax) {
-                MathJax.typesetPromise([postsContainer]);
-            }
-
             // Add copy buttons to each code block
             postsContainer.querySelectorAll('pre code').forEach(codeEl => {
                 const pre = codeEl.parentElement;
@@ -1582,6 +1582,9 @@
             });
 
             setTimeout(() => {
+                if (window.MathJax) {
+                    MathJax.typesetPromise([postsContainer]);
+                }
                 Prism.highlightAllUnder(postsContainer);
             }, 100);
 
