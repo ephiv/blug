@@ -616,6 +616,17 @@
             color: var(--text-primary);
         }
 
+        .regex-highlight {
+            background-color: var(--accent-color);
+            color: var(--text-primary);
+            padding: 0 2px;
+        }
+        [data-theme="dark"] .regex-highlight {
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+
         .loading {
             text-align: center;
             color: var(--text-muted);
@@ -887,6 +898,7 @@
 
         <div id="post-controls" class="post-controls">
             <input type="text" id="search-input" placeholder="Search posts...">
+            <input type="text" id="regex-input" placeholder="Regex search...">
             <select id="filter-date">
                 <option value="">All dates</option>
             </select>
@@ -1489,9 +1501,13 @@
         }
 
         function applyFilters() {
+            clearRegexHighlights();
+            regexInput.value = ''; // also reset the regex box when doing normal search
+
             let query = searchInput.value.trim().toLowerCase();
             const filterValue = filterDate.value;
             const order = sortOrder.value;
+
 
             let filtered = posts.filter(post => {
                 if (query.startsWith('id=')) {
@@ -1542,6 +1558,84 @@
         searchInput.addEventListener('input', applyFilters);
         filterDate.addEventListener('change', applyFilters);
         sortOrder.addEventListener('change', applyFilters);
+
+        const regexInput = document.getElementById('regex-input');
+        regexInput.addEventListener('input', applyRegexSearch);
+
+        function applyRegexSearch() {
+            const pattern = regexInput.value.trim();
+            if (!pattern) {
+                // clear highlights and just reapply normal search
+                clearRegexHighlights();
+                applyFilters();
+                return;
+            }
+
+            let regex;
+            try {
+                regex = new RegExp(pattern, 'gi');
+            } catch (e) {
+                console.error('Invalid regex:', e);
+                return;
+            }
+
+            const matchedPosts = posts.filter(post =>
+                regex.test(post.title) || regex.test(post.excerpt) || regex.test(post.content)
+            );
+
+            renderPosts(matchedPosts);
+
+            // Highlight matches in rendered HTML
+            highlightRegexInContainer(regex, postsContainer);
+        }
+
+        function clearRegexHighlights() {
+            postsContainer.querySelectorAll('.regex-highlight').forEach(el => {
+                el.replaceWith(el.textContent);
+            });
+        }
+
+        function highlightRegexInContainer(regex, container) {
+            // Walk through elements we care about: title, excerpt, content
+            ['.post-title', '.post-excerpt', '.post-content'].forEach(selector => {
+                container.querySelectorAll(selector).forEach(el => {
+                    highlightText(el, regex);
+                });
+            });
+        }
+
+        function highlightText(element, regex) {
+            // Walk text nodes only
+            const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null, false);
+            const textNodes = [];
+            while (walker.nextNode()) textNodes.push(walker.currentNode);
+
+            textNodes.forEach(node => {
+                const parent = node.parentNode;
+                if (!regex.test(node.nodeValue)) return;
+
+                const frag = document.createDocumentFragment();
+                let lastIndex = 0;
+                node.nodeValue.replace(regex, (match, offset) => {
+                    // add text before
+                    if (offset > lastIndex) {
+                        frag.appendChild(document.createTextNode(node.nodeValue.slice(lastIndex, offset)));
+                    }
+                    // add highlighted span
+                    const span = document.createElement('span');
+                    span.className = 'regex-highlight';
+                    span.textContent = match;
+                    frag.appendChild(span);
+                    lastIndex = offset + match.length;
+                });
+                // add tail
+                if (lastIndex < node.nodeValue.length) {
+                    frag.appendChild(document.createTextNode(node.nodeValue.slice(lastIndex)));
+                }
+                parent.replaceChild(frag, node);
+            });
+        }
+
 
         function renderPosts(posts) {
             if (!posts || posts.length === 0) {
